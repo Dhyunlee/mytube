@@ -1,16 +1,18 @@
-# "Youtube"
-## Join Ahn님의 기본 강좌를 보며 실습한 내용입니다.
+Hello, My Friends  
+Thank you for having interest in this repository ! 
 
-## 작업환경 세팅
-### - 일단 clone 또는 다운 
-```bash
-git clone https://github.com/Dhyunlee/basic-React-nodejs
-``` 
-  
-<br/>
-<br/> 
+To use this application, 
 
-### - 필요한 모듈 설치 
-```bash
-npm install
-```
+1. make dev.js file inside config folder 
+2. put mongoDB info into dev.js file 
+3. Type  " npm install " inside the root directory  ( Download Server Dependencies ) 
+4. Type " npm install " inside the client directory ( Download Front-end Dependencies )
+
+
+If you have problem, feel free to ask me ^^ 
+
+You can watch the tutorial for this app.
+
+https://www.youtube.com/channel/UCFyXA9x8lpL3EYWeYhj4C4Q?view_as=subscriber
+
+

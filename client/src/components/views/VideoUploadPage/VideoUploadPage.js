@@ -23,37 +23,56 @@ function VideoUploadPage(props) {
   const [Description, setDescription] = useState('');
   const [Private, setPrivate] = useState(0);
   const [Category, setCategory] = useState('Film & Animation');
+  const [FilePath, setFilePath] = useState('');
+  const [Duration, setDuration] = useState('');
+  const [ThumbnailPath, setThumbnailPath] = useState('');
 
-  const onTitleChange = (e) => {
+  const onTitleChange = e => {
     setVideoTitle(e.currentTarget.value);
-  }
-  const onDescriptionChange = (e) => {
+  };
+  const onDescriptionChange = e => {
     setDescription(e.currentTarget.value);
-  }
-  const onPrivateChange =(e) => {
+  };
+  const onPrivateChange = e => {
     setPrivate(e.currentTarget.value);
-  }
+  };
 
-  const onCategoryChange = (e) => {
+  const onCategoryChange = e => {
     setCategory(e.currentTarget.value);
-  }
+  };
 
-  const onDrop = (files) => {
+  const onDrop = files => {
     let formData = new FormData();
     const config = {
-      header: {'content-type': 'multiple/form-data'}
-    }
-    formData.append('file', files[0])
+      header: { 'content-type': 'multiple/form-data' },
+    };
+    formData.append('file', files[0]);
 
-    Axios.post('/api/video/uploadfiles', formData, config)
-      .then(res_Data => {
-        console.log(res_Data.data)
-        if(res_Data.data.success) {
-        } else {
-          alert('비디오 업로드를 실패했습니다.')
-        }
-      })
-  }
+    Axios.post('/api/video/uploadfiles', formData, config).then(resData => {
+      console.log(resData.data);
+      if (resData.data.success) {
+        let variable = {
+          filePath: resData.data.url,
+          fileName: resData.data.fileName,
+        };
+
+        setFilePath(resData.data.url);
+
+        Axios.post('/api/video/thumbnail', variable).then(resData => {
+          if (resData.data.success) {
+            console.log(resData.data.filePath);
+
+            setDuration(resData.data.fileDuration);
+            setThumbnailPath(resData.data.filePath);
+          } else {
+            alert('썸네일 생성에 실패했습니다.');
+          }
+        });
+      } else {
+        alert('비디오 업로드를 실패했습니다.');
+      }
+    });
+  };
 
   return (
     <div
@@ -79,11 +98,7 @@ function VideoUploadPage(props) {
           }}
         >
           {/* Drop zone */}
-          <Dropzone 
-            onDrop={onDrop} 
-            multiple={false} 
-            maxSize={1000000000}
-          >
+          <Dropzone onDrop={onDrop} multiple={false} maxSize={1000000000}>
             {({ getRootProps, getInputProps }) => (
               <div
                 style={{
@@ -101,10 +116,16 @@ function VideoUploadPage(props) {
               </div>
             )}
           </Dropzone>
+
           {/* Thumbnail */}
-          <div>
-            <img />
-          </div>
+          {ThumbnailPath && (
+            <div>
+              <img
+                src={`http://localhost:5000/${ThumbnailPath}`}
+                alt='thumbnail'
+              />
+            </div>
+          )}
         </div>
         <br />
         <br />

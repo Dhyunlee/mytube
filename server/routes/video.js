@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const { Video } = require("../models/Video");
+const { Video } = require('../models/Video');
 const { auth } = require('../middleware/auth');
 const multer = require('multer');
 const ffmpeg = require('fluent-ffmpeg');
@@ -43,7 +43,6 @@ router.post('/uploadfiles', (req, res) => {
 
 // 썸네일 생성하고 비디오 러닝타임도 가져오기
 router.post('/thumbnail', (req, res) => {
-
   let filePath = '';
   let fileDuration = '';
 
@@ -85,6 +84,21 @@ router.post('/thumbnail', (req, res) => {
       // %b input basename ( filename w/o extension )
       filename: 'thumbnail-%b.png',
     });
+});
+
+// 클라이언트에서 받은 비디오 정보들을 저장
+router.post('/uploadVideo', (req, res) => {
+  // 비디오 정보를 디비에 저장
+
+  const video = new Video(req.body);
+  // Video 모델 인스턴스에 비디오 업로드 정보 담기
+
+  video.save((err, doc) => {
+    // video에 담은 정보를 디비에 저장
+    if (err) return res.json({ success: false, err });
+    res.status(200).json({ success: true });
+  });
+
 });
 
 module.exports = router;

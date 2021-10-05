@@ -98,7 +98,20 @@ router.post('/uploadVideo', (req, res) => {
     if (err) return res.json({ success: false, err });
     res.status(200).json({ success: true });
   });
-
 });
+
+// 디비에서 비디오 데이터 가져와서 클라이언트에 전송
+router.get('/getVideos', (req, res) => {
+     // 디비에서 비디오 데이터 가져오기
+     Video.find()
+      .populate('writer')
+      .exec((err, videos) => {
+        if(err) return res.status(400).json({success: false, err});
+        res.status(200).json({success: true, videos})
+      })
+});
+
+
+
 
 module.exports = router;

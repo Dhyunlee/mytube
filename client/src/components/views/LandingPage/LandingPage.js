@@ -27,7 +27,7 @@ function LandingPage() {
     let seconds = Math.floor(video.duration - minutes * 60);
 
     return (
-      <Col lg={6} md={8} xs={24}>
+      <Col lg={6} md={8} xs={24} key={idx}>
         <div style={{ position: 'relative' }}>
           <a href={`/video/${video._id}`}>
             <img

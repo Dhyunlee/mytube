@@ -9,10 +9,9 @@ function Subscribe(props) {
       let subscribeNumberVariable = { userTo: props.userTo };
       let subscribedVariable = {
         userTo: props.userTo,
-        userFrom: localStorage.getItem('userId'),
+        userFrom: props.userFrom,
       };
       
-
     Axios.post('/api/subscribe/subscribeNumber', subscribeNumberVariable).then(
       resData => {
         if (resData.data.success) {
@@ -35,6 +34,37 @@ function Subscribe(props) {
     );
   }, []);
 
+  const onSubscribe = () => {
+    let subscribedVariable = {
+        userTo: props.userTo,
+        userFrom: props.userFrom
+    }
+
+    // 이미 구독 중이라면
+    if(Subscribed) {
+        Axios.post('/api/subscribe/unSubscribe', subscribedVariable)
+            .then(resData => {
+                if(resData.data.success) {
+                    setSubscribeNumber(SubscribeNumber - 1);
+                    setSubscribed(!Subscribed);
+                } else {
+                    alert('구독 취소하는데 실패했습니다.')
+                }
+            })
+    // 아직 구독 중이 아니라면
+    } else {
+        Axios.post('/api/subscribe/subscribe', subscribedVariable)
+            .then(resData => {
+                if(resData.data.success) {
+                    setSubscribeNumber(SubscribeNumber + 1);
+                    setSubscribed(!Subscribed);
+                } else {
+                    alert('구독하는데 실패했습니다.')
+                }
+            })
+    }
+  }
+
   return (
     <div>
       <button
@@ -49,7 +79,7 @@ function Subscribe(props) {
           textTransform: 'uppercase',
           cursor: 'pointer',
         }}
-        onClick
+        onClick={onSubscribe}
       >
         {SubscribeNumber} {Subscribed ? 'Subscribed' : 'Subscribe'}
       </button>

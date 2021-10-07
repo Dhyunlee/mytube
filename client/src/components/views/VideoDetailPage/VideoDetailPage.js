@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, List, Avatar } from 'antd';
 import Axios from 'axios';
+import SideVideo from './Sections/SideVideo';
 
 function VideoDetailPage(props) {
   const [VideoDetail, setVideoDetail] = useState([]);
@@ -24,6 +25,7 @@ function VideoDetailPage(props) {
     return (
       <Row gutter={[16, 16]}>
         <Col lg={18} xs={24}>
+            {/* view video */}
           <div
             style={{
               width: '100%',
@@ -50,7 +52,8 @@ function VideoDetailPage(props) {
           </div>
         </Col>
         <Col lg={6} xs={24}>
-          Side Videos
+          {/* Side Videos */}
+              <SideVideo/>
         </Col>
       </Row>
     );

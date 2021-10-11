@@ -24,7 +24,7 @@ function VideoDetailPage(props) {
 
   if (VideoDetail.writer) {
     return (
-      <Row gutter={[16, 16]}>
+      <Row>
         <Col lg={18} xs={24}>
             {/* view video */}
           <div

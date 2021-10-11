@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { FaCode } from 'react-icons/fa';
-import { Card, Avatar, Col, Row, Typography } from 'antd';
+import { Avatar, Col, Row, Typography } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import Axios from 'axios';
 import moment from 'moment';
 
-const { Title } = Typography;
-// const { Meta } = Card;
 
-function LandingPage() {
+const { Title } = Typography;
+
+function SubscriptionPage() {
   const [Video, setVideo] = useState([]);
 
   // 몽고디비에서 모든 비디오 데이터 가져오기
   useEffect(() => {
-    Axios.get('/api/video/getVideos').then(resData => {
-      if (resData.data.success) {
-        console.log(resData.data);
-        setVideo(resData.data.videos);
-      } else {
-        alert('비디오 가져오기를 실패했습니다.');
+    const subscriptionVariables = {
+      userFrom: localStorage.getItem('userId'),
+    };
+    Axios.post('/api/video/getSubscriptionVideos', subscriptionVariables).then(
+      resData => {
+        if (resData.data.success) {
+          console.log(resData.data);
+          setVideo(resData.data.videos);
+        } else {
+          alert('비디오 가져오기를 실패했습니다.');
+        }
       }
-    });
+    );
   }, []);
+
   const renderCards = Video.map((video, idx) => {
     let minutes = Math.floor(video.duration / 60);
     let seconds = Math.floor(video.duration - minutes * 60);
@@ -86,4 +91,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default SubscriptionPage;

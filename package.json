@@ -1,7 +1,7 @@
 {
-  "name": "react-boiler-plate",
+  "name": "mytube",
   "version": "1.0.0",
-  "description": "react boiler plate",
+  "description": "mytube",
   "main": "index.js",
   "engine": {
     "node": "10.16.0",

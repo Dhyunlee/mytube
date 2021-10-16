@@ -1,33 +1,36 @@
 import Axios from 'axios';
 import React, { useState } from 'react';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
+import SingleComment from './SingleComment';
 
 function Comment(props) {
-    const videoId = props.videoId;
-    const user = useSelector(state => state.user)
-    const [CommentValue, setCommentValue] = useState("");
+  const videoId = props.postId;
+  const user = useSelector(state => state.user);
+  const [CommentValue, setCommentValue] = useState('');
 
-  const handleChange = (e) => {
-    setCommentValue(e.currentTarget.value)
-  }  
+  const handleChange = e => {
+    setCommentValue(e.currentTarget.value);
+  };
 
-  const handleSubmit = (e) => {
-      e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault();
 
-      const variables = {
-          content: CommentValue,
-          writer: user.userData._id,
-          postId: videoId
-      }   
-      Axios.post('/api/comment/saveComment', variables)
-       .then(resData => {
-           if(resData.data.success) {
-             console.log(resData.data.comment)
-           } else {
-            alert('커멘트를 저장하지 못했습니다.')
-           }
-       })
-  }
+    const variables = {
+      content: CommentValue,
+      writer: user.userData._id,
+      postId: videoId,
+    };
+
+    Axios.post('/api/comment/saveComment', variables).then(resData => {
+      if (resData.data.success) {
+        setCommentValue(''); 
+
+        props.refreshFunction(resData.data.comment)
+      } else {
+        alert('커멘트를 저장하지 못했습니다.');
+      }
+    });
+  };
 
   return (
     <div>
@@ -36,6 +39,12 @@ function Comment(props) {
       <hr />
 
       {/* Comment Lists */}
+      {props.commentLists &&
+        props.commentLists.map((comment, idx) => (
+          (!comment.responseTo && 
+            <SingleComment  refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />
+          )
+        ))}
 
       {/* Root Commnet From */}
 

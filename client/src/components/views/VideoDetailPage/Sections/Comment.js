@@ -1,10 +1,11 @@
 import Axios from 'axios';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import ReplyComment from './ReplyComment';
 import SingleComment from './SingleComment';
 
 function Comment(props) {
-  const videoId = props.postId;
+  const postId = props.postId;
   const user = useSelector(state => state.user);
   const [CommentValue, setCommentValue] = useState('');
 
@@ -18,14 +19,14 @@ function Comment(props) {
     const variables = {
       content: CommentValue,
       writer: user.userData._id,
-      postId: videoId,
+      postId: postId,
     };
 
     Axios.post('/api/comment/saveComment', variables).then(resData => {
       if (resData.data.success) {
-        setCommentValue(''); 
+        setCommentValue('');
 
-        props.refreshFunction(resData.data.comment)
+        props.refreshFunction(resData.data.comment);
       } else {
         alert('커멘트를 저장하지 못했습니다.');
       }
@@ -39,15 +40,27 @@ function Comment(props) {
       <hr />
 
       {/* Comment Lists */}
-      {props.commentLists &&
-        props.commentLists.map((comment, idx) => (
-          (!comment.responseTo && 
-            <SingleComment  refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />
-          )
-        ))}
+      {props.commentList &&
+        props.commentList.map(
+          (comment, idx) =>
+            !comment.responseTo && (
+              <React.Fragment>
+                <SingleComment
+                  comment={comment}
+                  postId={postId}
+                  refreshFunction={props.refreshFunction}
+                />
+                <ReplyComment
+                  parentCommentId={comment._id}
+                  postId={props.postId}
+                  commentList={props.commentList}
+                  refreshFunction={props.refreshFunction}
+                />
+              </React.Fragment>
+            )
+        )}
 
       {/* Root Commnet From */}
-
       <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
         <textarea
           style={{

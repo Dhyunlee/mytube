@@ -76,7 +76,7 @@ function VideoDetailPage(props) {
             </List.Item>
 
             {/* Comments */}
-            <Comment refreshFunction={updateComment} commentLists={Comments} postId={videoId} />
+            <Comment refreshFunction={updateComment} commentList={Comments} postId={videoId} />
           </div>
         </Col>
         <Col lg={6} xs={24}>

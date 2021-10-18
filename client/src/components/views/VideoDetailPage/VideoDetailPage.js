@@ -4,13 +4,14 @@ import Axios from 'axios';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
+import LikeDislikes from './Sections/LikeDislikes';
 
 function VideoDetailPage(props) {
   const [VideoDetail, setVideoDetail] = useState([]);
   const [Comments, setComments] = useState([]);
 
   const videoId = props.match.params.videoId;
-  
+
   const variable = {
     videoId: videoId,
   };
@@ -26,7 +27,7 @@ function VideoDetailPage(props) {
 
     Axios.post('/api/comment/getComments', variable).then(resData => {
       if (resData.data.success) {
-        console.log('data:', resData.data.comments)
+        console.log('data:', resData.data.comments);
         setComments(resData.data.comments);
       } else {
         alert('커멘트 정보를 가져오는데 실패했습니다.');
@@ -34,9 +35,9 @@ function VideoDetailPage(props) {
     });
   }, []);
 
-  const updateComment = (newComment) => {
-    setComments(Comments.concat(newComment))
-  }
+  const updateComment = newComment => {
+    setComments(Comments.concat(newComment));
+  };
 
   if (VideoDetail.writer) {
     // 업로드한 유저이면 해당 컨텐츠 구독 버튼 비활성화
@@ -67,7 +68,16 @@ function VideoDetailPage(props) {
               controls
             />
 
-            <List.Item actions={[subscribeButton]}>
+            <List.Item
+              actions={[
+                <LikeDislikes
+                  video
+                  userId={localStorage.getItem('userId')}
+                  videoId={videoId}
+                />,
+                subscribeButton,
+              ]}
+            >
               <List.Item.Meta
                 avatar={<Avatar src={VideoDetail.writer.image} />}
                 title={VideoDetail.writer.name}
@@ -76,7 +86,11 @@ function VideoDetailPage(props) {
             </List.Item>
 
             {/* Comments */}
-            <Comment refreshFunction={updateComment} commentList={Comments} postId={videoId} />
+            <Comment
+              refreshFunction={updateComment}
+              commentList={Comments}
+              postId={videoId}
+            />
           </div>
         </Col>
         <Col lg={6} xs={24}>
